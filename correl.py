@@ -21,7 +21,7 @@ class CorrelationMatrix:
 
     @staticmethod
     def __check_key_type( key ) -> bool:
-        return not isinstance( key, tuple ) or len( key ) != 2
+        return isinstance( key, tuple ) and len( key ) == 2
         
     def __keys_exist( self, key1, key2 ) -> bool:
         return key1 in self.__keys and key2 in self.__keys
@@ -44,14 +44,17 @@ class CorrelationMatrix:
 
     def __setitem__( self, key, value ) -> None:
 
-        if not self.__check_key_type:
+        if not self.__check_key_type( key ):
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
 
+        key1, key2 = key
+
         if self.__keys_exist( *key ):
-            return self.get_correl( *key )
+            the_key = self.get_values_key( key1, key2 )
+            self.__values[ the_key ] = value 
+
         elif not self.__frozen_keys:
-            #Keys are not frozen, we should add them dynamically
-            key1, key2 = key
+            
 
             if key1 not in self.__keys:
                 self.__initiate_key( key1 )
@@ -64,10 +67,10 @@ class CorrelationMatrix:
             
 
 
-    def __contains__( self, key1, key2 ) -> float:
+    def __contains__( self, key1, key2 ) -> bool:
         return ( key1, key2 ) in self.__values or ( key2, key1 ) in self.__values
 
-    def get_values_key( self, key1, key2 ) -> float:
+    def get_values_key( self, key1, key2 ) :
 
         if ( key1, key2 ) in self.__values:
             return ( key1, key2 )
