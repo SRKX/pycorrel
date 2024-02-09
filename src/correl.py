@@ -1,0 +1,34 @@
+from symmetric_matrix import SymmetricMatrix
+
+class CorrelationMatrix( SymmetricMatrix ):
+    
+    def __init__( self, keys = None, frozen_keys = False ):
+        
+        super().__init__( keys, frozen_keys )
+    
+    def __getitem__( self, key ) -> float:
+       
+        if self.__check_key_type( key ):
+
+            #We get the two keys requested
+            key1, key2 = key
+
+            if key1 == key2:
+                return 1
+            else:
+                return super()[ key1, key2 ]
+
+        else:
+            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
+
+
+    def __setitem__( self, key, value:float ) -> None:
+
+        if not self.__check_key_type( key ):
+            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
+        else:
+            key1, key2 = key
+            if key1 == key2 and value != 1:
+                raise ValueError( "Correlation between an two identical keys should only be 1" )
+            else:
+                super()[ key1, key2 ] = value
