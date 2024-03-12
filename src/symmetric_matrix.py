@@ -40,7 +40,7 @@ class SymmetricMatrix:
             #We get the two keys requested
             key1, key2 = key
 
-            return self.get_value( key1, key2 ) #Note: we could also write self.get_correl( *key )
+            return self.get_value( key1, key2 ) #Note: we could also write self.get_value( *key )
         else:
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
 
