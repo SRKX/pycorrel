@@ -22,7 +22,7 @@ class SymmetricMatrix:
 
 
     @staticmethod
-    def __check_key_type( key ) -> bool:
+    def _check_key_type( key ) -> bool:
         return isinstance( key, tuple ) and len( key ) == 2
         
     def __keys_exist( self, key1, key2 ) -> bool:
@@ -35,7 +35,7 @@ class SymmetricMatrix:
 
     def __getitem__( self, key ) -> float:
        
-        if self.__check_key_type( key ):
+        if self._check_key_type( key ):
 
             #We get the two keys requested
             key1, key2 = key
@@ -49,7 +49,7 @@ class SymmetricMatrix:
         if not isinstance( value, float ):
             raise TypeError( f"Correlation value should be expressed as a float, provided {type(value)}")
 
-        if not self.__check_key_type( key ):
+        if not self._check_key_type( key ):
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
 
         key1, key2 = key
@@ -73,7 +73,7 @@ class SymmetricMatrix:
 
     def __contains__( self, key ) -> bool:
         """Determines whether there is a value for the association key1 and key2"""
-        if self.__check_key_type( key ):
+        if self._check_key_type( key ):
             key1, key2 = key
             return self.get_values_key( key1, key2 ) is not None
         else:
@@ -91,7 +91,7 @@ class SymmetricMatrix:
 
     def get_value( self, key1, key2 ) -> float:
         """Returns the value associated to the pair of keys"""
-        the_key = self.get_values_key( ( key1, key2 ) )
+        the_key = self.get_values_key( key1, key2 )
         if the_key is None:
             raise IndexError( f"No value for key pair : ({key1}, {key2})" )
         else:

@@ -8,15 +8,21 @@ class CorrelationMatrix( SymmetricMatrix ):
     
     def __getitem__( self, key ) -> float:
        
-        if self.__check_key_type( key ):
+        if self._check_key_type( key ):
 
             #We get the two keys requested
             key1, key2 = key
 
             if key1 == key2:
-                return 1
+                #We have the same key
+                if self.key1 in self.keys:
+                    #The key exists
+                    return 1
+                else:
+                    #The key does not exists
+                    raise IndexError( f"Key '{key1}' does not exist in the matrix" )
             else:
-                return super()[ key1, key2 ]
+                return super().__getitem__( key )
 
         else:
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
@@ -24,11 +30,22 @@ class CorrelationMatrix( SymmetricMatrix ):
 
     def __setitem__( self, key, value:float ) -> None:
 
-        if not self.__check_key_type( key ):
+        if not self._check_key_type( key ):
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
         else:
             key1, key2 = key
             if key1 == key2 and value != 1:
                 raise ValueError( "Correlation between an two identical keys should only be 1" )
             else:
-                super()[ key1, key2 ] = value
+                super().__setitem__( key, value )
+
+
+def test():
+    rho = CorrelationMatrix()
+    rho[ "A", "B"] = 0.5
+    print( rho[ "A", "B" ] )
+    print( rho[ "B", "A" ] )
+
+
+if __name__ == "__main__":
+    test()
