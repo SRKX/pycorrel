@@ -1,4 +1,4 @@
-from symmetric_matrix import SymmetricMatrix
+from src.symmetric_matrix import SymmetricMatrix
 
 class CorrelationMatrix( SymmetricMatrix ):
     
@@ -37,7 +37,10 @@ class CorrelationMatrix( SymmetricMatrix ):
             if key1 == key2 and value != 1:
                 raise ValueError( "Correlation between an two identical keys should only be 1" )
             else:
-                super().__setitem__( key, value )
+                if value >= -1.0 and value <= 1.0:
+                    super().__setitem__( key, value )
+                else:
+                    raise ValueError( f"Correlation has to be in [-1,+1], provided {value}" )
 
 
 def test():
