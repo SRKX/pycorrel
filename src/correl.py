@@ -15,7 +15,7 @@ class CorrelationMatrix( SymmetricMatrix ):
 
             if key1 == key2:
                 #We have the same key
-                if self.key1 in self.keys:
+                if key1 in self.keys:
                     #The key exists
                     return 1
                 else:

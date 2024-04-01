@@ -67,6 +67,11 @@ class SymmetricMatrix:
                 self.__initiate_key( key2 )
 
             the_key = self.get_values_key( key1, key2 )
+            
+            if the_key is None:
+                #If this pair was never set, we use a default pair
+                the_key = ( key1, key2 )
+            
             self.__values[ the_key ] = value 
             
 
@@ -97,4 +102,5 @@ class SymmetricMatrix:
         else:
             #We return the key from the pair
             return self.__values[ the_key ]
+        
         
