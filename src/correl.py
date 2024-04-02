@@ -43,6 +43,18 @@ class CorrelationMatrix( SymmetricMatrix ):
                     raise ValueError( f"Correlation has to be in [-1,+1], provided {value}" )
 
 
+    def __contains__(self, key_pair: tuple) -> bool:
+        
+        if not self._check_key_type( key_pair ):
+            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
+        else:
+            key1, key2 = key_pair
+            if key1 == key2 and key1 in self.keys:
+                return True
+            else:
+                return super().__contains__(key_pair)
+
+
 def test():
     rho = CorrelationMatrix()
     rho[ "A", "B"] = 0.5
