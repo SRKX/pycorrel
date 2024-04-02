@@ -91,7 +91,7 @@ class SymmetricMatrix:
 
             return self.get_value( key1, key2 ) #Note: we could also write self.get_value( *key )
         else:
-            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key_pair)}")
+            raise TypeError( f"Keys should be expressed as 2-tuple, provided {type(key_pair)}")
 
     def __setitem__( self, key_pair: tuple, value:float ) -> None:
         """
@@ -103,10 +103,10 @@ class SymmetricMatrix:
         """
 
         if not isinstance( value, float ):
-            raise TypeError( f"Correlation value should be expressed as a float, provided {type(value)}")
+            raise TypeError( f"Value should be expressed as a float, provided {type(value)}")
 
         if not self._check_key_type( key_pair ):
-            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key_pair)}")
+            raise TypeError( f"Keys should be expressed as 2-tuple, provided {type(key_pair)}")
 
         key1, key2 = key_pair
         if self.__keys_exist( *key_pair ):
@@ -133,7 +133,7 @@ class SymmetricMatrix:
             
             if the_key is None:
                 #If this pair was never set, we use a default pair
-                the_key = ( key1, key2 )
+                the_key = key_pair
             
             self.__values[ the_key ] = value 
         else:
@@ -158,7 +158,7 @@ class SymmetricMatrix:
             key1, key2 = key_pair
             return self.get_values_key( key1, key2 ) is not None
         else:
-            raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key_pair)}")
+            raise TypeError( f"Keys should be expressed as 2-tuple, provided {type(key_pair)}")
 
     def get_values_key( self, key1, key2 ) -> Optional[ tuple ]:
         """
