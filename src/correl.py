@@ -37,10 +37,17 @@ class CorrelationMatrix( SymmetricMatrix ):
             if key1 == key2 and value != 1:
                 raise ValueError( "Correlation between an two identical keys should only be 1" )
             else:
-                if value >= -1.0 and value <= 1.0:
+                if -1.0 <= value <= 1.0:
                     super().__setitem__( key, value )
                 else:
                     raise ValueError( f"Correlation has to be in [-1,+1], provided {value}" )
+
+
+    def _initiate_key(self, key) -> None:
+        # Applies the logic of the super class
+        super()._initiate_key(key)
+        # Then, ensures that the correlation is 1
+        self[ key, key ] = 1.0
 
 
     def __contains__(self, key_pair: tuple) -> bool:

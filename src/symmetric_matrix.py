@@ -62,7 +62,7 @@ class SymmetricMatrix:
         
         return key1 in self.__keys and key2 in self.__keys
 
-    def __initiate_key( self, key ) -> None:
+    def _initiate_key( self, key ) -> None:
         """
         Adds a key to the matrix.
 
@@ -124,10 +124,10 @@ class SymmetricMatrix:
             #Keys are not frozen, so we can add the one required
 
             if key1 not in self.__keys:
-                self.__initiate_key( key1 )
+                self._initiate_key( key1 )
 
             if key2 not in self.__keys:
-                self.__initiate_key( key2 )
+                self._initiate_key( key2 )
 
             the_key = self.get_values_key( key1, key2 )
             
