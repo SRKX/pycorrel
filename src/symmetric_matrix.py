@@ -13,15 +13,24 @@ class SymmetricMatrix:
             frozen_keys (bool): If True, keys cannot be added after initialization. Defaults to False.
         """
         
-        
-        #The keys of the correlation matrix are stored in a set
-        self.__keys = frozenset( key for key in keys ) if keys is not None else frozenset()
-
-        #Determines whether the keys should be frozen or not
-        self.__frozen_keys = frozen_keys
-
         #TODO Handle values initializer
         self.__values = {}
+        
+        # First allows keys to be unfrozen for initialization
+        self.__frozen_keys = False
+        
+        #The keys of the correlation matrix are stored in a set
+        self.__keys = frozenset()
+        
+        # Initiates all keys if provided
+        if keys is not None:
+            for key in keys:
+                self._initiate_key( key )
+
+        # Then, determines whether the keys should be frozen or not
+        self.__frozen_keys = frozen_keys
+
+        
 
     @property
     def keys( self ) -> set:
@@ -69,8 +78,10 @@ class SymmetricMatrix:
         Args:
             key: The key to add.
         """
-        
-        self.__keys = self.__keys | frozenset( [ key ] )
+        if self.__frozen_keys:
+            raise IndexError( f"Cannot add key '{key}' becauses keys are frozen." )
+        else:
+            self.__keys = self.__keys | frozenset( [ key ] )
 
 
     def __getitem__( self, key_pair: tuple ) -> float:
@@ -120,7 +131,7 @@ class SymmetricMatrix:
             #We assigne the value to the pair
             self.__values[ the_key ] = value 
 
-        elif not self.__frozen_keys:
+        else:
             #Keys are not frozen, so we can add the one required
 
             if key1 not in self.__keys:
@@ -136,12 +147,7 @@ class SymmetricMatrix:
                 the_key = key_pair
             
             self.__values[ the_key ] = value 
-        else:
-            #Keys are frozen, yet they do not exists
-            
-            msg = f"Key '{key1 if key1 not in self.__keys else key2 }' not in the set of keys, and keys are frozen"
-            
-            raise IndexError( msg )
+        
 
 
     def __contains__( self, key_pair:tuple ) -> bool:
