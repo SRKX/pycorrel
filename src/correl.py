@@ -39,14 +39,3 @@ class CorrelationMatrix( SymmetricMatrix ):
                 return True
             else:
                 return super().__contains__(key_pair)
-
-
-def test():
-    rho = CorrelationMatrix()
-    rho[ "A", "B"] = 0.5
-    print( rho[ "A", "B" ] )
-    print( rho[ "B", "A" ] )
-
-
-if __name__ == "__main__":
-    test()
