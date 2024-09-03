@@ -1,6 +1,6 @@
 import pytest
-from src.symmetric_matrix import SymmetricMatrix
-from src.correl import CorrelationMatrix
+from src.pycorrelation.symmetric_matrix import SymmetricMatrix
+from src.pycorrelation.correl import CorrelationMatrix
 
 
 def symmetric_assignment( matrix, key1, key2, value ):

@@ -1,4 +1,4 @@
-from src.symmetric_matrix import SymmetricMatrix
+from src.pycorrelation.symmetric_matrix import SymmetricMatrix
 
 class CorrelationMatrix( SymmetricMatrix ):
     
