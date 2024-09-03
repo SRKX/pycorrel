@@ -16,3 +16,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/SRKX/pycorrelation"
 Issues = "https://github.com/SRKX/pycorrelation/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
