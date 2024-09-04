@@ -1,13 +1,26 @@
-from src.pycorrelation.symmetric_matrix import SymmetricMatrix
+from .symmetric_matrix import SymmetricMatrix
 
 class CorrelationMatrix( SymmetricMatrix ):
     
     def __init__( self, keys = None, frozen_keys = False ):
-        
+        """
+        Initializes the CorrelationMatrix instance.
+
+        Args:
+            keys (optional): Initial keys to set up in the matrix.
+            frozen_keys (optional): If True, keys cannot be modified after initialization.
+        """
         super().__init__( keys, frozen_keys )
 
 
     def __setitem__( self, key, value:float ) -> None:
+        """
+        Sets the value for the given key, ensuring that both entities are different, and that the value is always comprised in [-1, 1].
+
+        Args:
+            key_pair (tuple): The key pair for which to set the value.
+            value (float): The value to set for the key.
+        """
 
         if not self._check_key_type( key ):
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key)}")
@@ -23,6 +36,13 @@ class CorrelationMatrix( SymmetricMatrix ):
 
 
     def _initiate_key(self, key) -> None:
+        """
+        Adds a key to the matrix.
+
+        Args:
+            key: The key to add.
+        """
+        
         # Applies the logic of the super class
         super()._initiate_key(key)
         # Then, ensures that the correlation is 1
@@ -30,6 +50,15 @@ class CorrelationMatrix( SymmetricMatrix ):
 
 
     def __contains__(self, key_pair: tuple) -> bool:
+        """
+        Checks if the matrix contains a value for the given key pair.
+
+        Args:
+            key_pair (tuple): The key to check.
+
+        Returns:
+            bool: True if the matrix contains a value for the key, False otherwise.
+        """
         
         if not self._check_key_type( key_pair ):
             raise TypeError( f"Correlation keys should be expressed as 2-tuple, provided {type(key_pair)}")
