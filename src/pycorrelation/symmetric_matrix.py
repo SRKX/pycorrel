@@ -1,10 +1,9 @@
-from collections.abc import Iterable
-from typing import Optional
-
+from collections.abc import Hashable, Iterable
+from typing import Any, Optional, Tuple
 
 class SymmetricMatrix:
     
-    def __init__( self, keys:Optional[Iterable] = None, frozen_keys:bool = False ) -> None:
+    def __init__( self, keys:Optional[ Iterable[ Hashable ] ] = None, frozen_keys:bool = False ) -> None:
         """
         Initializes the SymmetricMatrix with optional keys and a flag to freeze keys.
 
@@ -14,13 +13,13 @@ class SymmetricMatrix:
         """
         
         #TODO Handle values initializer
-        self.__values = {}
+        self.__values: dict[ Tuple[ Hashable, Hashable ], Any ] = {}
         
         # First allows keys to be unfrozen for initialization
         self.__frozen_keys = False
         
         #The keys of the correlation matrix are stored in a set
-        self.__keys = frozenset()
+        self.__keys: frozenset[ Hashable ] = frozenset()
         
         # Initiates all keys if provided
         if keys is not None:
@@ -33,7 +32,7 @@ class SymmetricMatrix:
         
 
     @property
-    def keys( self ) -> set:
+    def keys( self ) -> frozenset[ Hashable ]:
         """
         Returns a copy of the keys.
 
@@ -255,3 +254,105 @@ class SymmetricMatrix:
         """
         
         return repr( self )
+    
+    def to_2d_array( self, ordered_entities: Iterable[ Hashable ]  ) ->  list[ list[ Any ] ]:
+        """
+        Converts the SymmetricMatrix into a 2D array.
+
+        This method constructs a 2D array based on the values corresponding to 
+        pairs of keys from `ordered_entities`. The order of the keys in `ordered_entities` 
+        dictates the order of the rows and columns in the resulting 2D array.
+
+        Parameters:
+        ----------
+        ordered_entities : Iterable[ Hashable ]
+            An iterable (e.g., list) of keys that defines the order of rows and 
+            columns in the 2D array.
+
+        Returns:
+        -------
+        list[list[Any]]
+            A 2D array where each element represents the value for the pair of keys 
+            `(key1, key2)` based on the order defined by `ordered_entities`.
+
+        Raises:
+        -------
+        TypeError
+            If `ordered_entities` is not an iterable (e.g., list).
+
+        """
+
+        #Ensures we have one ordered set of keys
+        if not isinstance( ordered_entities, Iterable ):
+            raise TypeError(
+                f"Invalid type for 'ordered_entities'. Expected an Iterable (e.g., list, tuple) but got "
+                f"{type(ordered_entities).__name__}. Please pass a valid iterable to determine the "
+                "order of rows and columns in the resulting 2D array."
+            )
+            
+        #Builds the resulting 2d array
+        result = []
+        for key1 in ordered_entities:
+            #Initiates row
+            row = []
+            for key2 in ordered_entities:
+                #Adds value for pair
+                row.append( self[ key1, key2 ] )
+            #Adds row to final structure
+            result.append( row )
+            
+        return result
+    
+    def to_2d_dict( self, entities: Optional[ Iterable[ Hashable ] ] = None  ) ->  dict[ Hashable, dict[ Hashable, Any ] ]:
+        """
+        Converts a set of key-value pairs into a 2D dictionary.
+
+        This method constructs a 2D dictionary where the keys from `entities` 
+        serve as both the row and column headers, and the values are derived 
+        from the corresponding key pairs `(key1, key2)`. If `entities` is not 
+        provided, the method uses `self.keys`.
+
+        Parameters:
+        ----------
+        entities : Optional[Iterable[Hashable]], optional
+            An iterable of hashable keys that defines the order of rows and columns 
+            in the 2D dictionary. If not provided, `self.keys` is used.
+
+        Returns:
+        -------
+        dict[Hashable, dict[Hashable, Any]]
+            A 2D dictionary where each key in the outer dictionary corresponds 
+            to a row header, and each inner dictionary represents the row's 
+            values with keys as column headers.
+
+        Raises:
+        -------
+        TypeError
+            If `entities` is not an iterable (e.g., list, tuple).
+        """
+
+
+        #Ensures we have one ordered set of keys
+        if entities is None:
+            entities = self.keys
+        elif not isinstance( entities, Iterable ):
+            raise TypeError(
+                f"Invalid type for 'entities'. Expected an Iterable (e.g., list, tuple) but got "
+                f"{type(entities).__name__}. Please pass a valid iterable to determine the "
+                "keys in the resulting 2D dictionary."
+            )
+            
+        #Builds the resulting 2d dictionary
+        result = {}
+        for key1 in entities:
+            #Initiates sub-dict
+            subdict = {}
+            for key2 in entities:
+                #Adds value for pair
+                subdict[ key2 ] = self[ key1, key2 ]
+            #Adds subdict to final structure
+            result[ key1 ] = subdict
+            
+        return result
+    
+            

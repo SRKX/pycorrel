@@ -3,6 +3,21 @@ from src.pycorrelation.symmetric_matrix import SymmetricMatrix
 from src.pycorrelation.correl import CorrelationMatrix
 
 
+def build_sample_matrix():
+    """Builds sample matrix"""
+    
+    
+    matrix = SymmetricMatrix()
+    matrix[ 'a', 'a' ] = 0.09
+    matrix[ 'a', 'b' ] = 0.9
+    matrix[ 'b', 'b' ] = 0.08
+    matrix[ 'a', 'c' ] = 0.7
+    matrix[ 'b', 'c' ] = 0.6
+    matrix[ 'c', 'c' ] = 0.06
+    
+    return matrix
+
+
 def symmetric_assignment( matrix, key1, key2, value ):
     matrix[ key1, key2 ] = value
     assert matrix[ key1, key2 ] == value
@@ -94,6 +109,40 @@ def test_contains():
     assert ('a', 'b') in matrix
     assert ('b', 'a') in matrix
     assert ('a', 'c') not in matrix
+
+
+def test_2d_array_wrong_type():
+    #Tests whether 2d array requires a list
+    
+    matrix = build_sample_matrix()
+    
+    with pytest.raises(TypeError):
+        array_result = matrix.to_2d_array( 12.4 )
+    
+    
+def test_2d_array():
+    #Tests whether 2d array requires a list
+    
+    matrix = build_sample_matrix()
+    
+    
+    array_result = matrix.to_2d_array( [ 'b','c','a' ] )
+    
+    assert array_result[ 0 ][ 0 ] == matrix['b','b']
+
+
+def test_2d_dict():
+    #Tests whether 2d array requires a list
+    
+    matrix = build_sample_matrix()
+    
+    
+    dict_result = matrix.to_2d_dict()
+    
+    for k1 in matrix.keys:
+        for k2 in matrix.keys:
+            assert matrix[ k1, k2 ] == dict_result[ k1 ][ k2 ]
+
 
 
 ##############################
