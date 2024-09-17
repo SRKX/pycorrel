@@ -99,7 +99,7 @@ class SymmetricMatrix:
             #We get the two keys requested
             key1, key2 = key_pair
 
-            return self.get_value( key1, key2 ) #Note: we could also write self.get_value( *key )
+            return self._get_value( key1, key2 ) #Note: we could also write self.get_value( *key )
         else:
             raise TypeError( f"Keys should be expressed as 2-tuple, provided {type(key_pair)}")
 
@@ -122,7 +122,7 @@ class SymmetricMatrix:
         if self.__keys_exist( *key_pair ):
             #The pair already exists, we can set the value
             #We check if a value was already assigned
-            the_key = self.get_values_key( key1, key2 )
+            the_key = self._get_values_key( key1, key2 )
             if the_key is None:
                 #If not, we define the pair
                 the_key = key_pair 
@@ -139,7 +139,7 @@ class SymmetricMatrix:
             if key2 not in self.__keys:
                 self._initiate_key( key2 )
 
-            the_key = self.get_values_key( key1, key2 )
+            the_key = self._get_values_key( key1, key2 )
             
             if the_key is None:
                 #If this pair was never set, we use a default pair
@@ -161,11 +161,11 @@ class SymmetricMatrix:
         """
         if self._check_key_type( key_pair ):
             key1, key2 = key_pair
-            return self.get_values_key( key1, key2 ) is not None
+            return self._get_values_key( key1, key2 ) is not None
         else:
             raise TypeError( f"Keys should be expressed as 2-tuple, provided {type(key_pair)}")
 
-    def get_values_key( self, key1, key2 ) -> Optional[ tuple ]:
+    def _get_values_key( self, key1, key2 ) -> Optional[ tuple ]:
         """
         Returns the key pair used for storing the value for the given key pair.
 
@@ -185,7 +185,7 @@ class SymmetricMatrix:
             #We did not find the key pair
             return None
 
-    def get_value( self, key1, key2 ) -> float:
+    def _get_value( self, key1, key2 ) -> float:
         """
         Returns the value associated with the given key pair.
 
@@ -197,7 +197,7 @@ class SymmetricMatrix:
             float: The value associated with the key pair.
         """
         
-        the_key = self.get_values_key( key1, key2 )
+        the_key = self._get_values_key( key1, key2 )
         if the_key is None:
             raise IndexError( f"No value for key pair : ({key1}, {key2})" )
         else:
@@ -236,7 +236,7 @@ class SymmetricMatrix:
                 else:
                     try:
                         # Tries to get the value
-                        value = self.get_value(key1, key2)
+                        value = self._get_value(key1, key2)
                     except IndexError:
                         # If value is undefined, shows ?
                         value = '?'
@@ -255,17 +255,17 @@ class SymmetricMatrix:
         
         return repr( self )
     
-    def to_2d_array( self, ordered_entities: Iterable[ Hashable ]  ) ->  list[ list[ Any ] ]:
+    def to_2d_array( self, ordered_keys: Iterable[ Hashable ]  ) ->  list[ list[ Any ] ]:
         """
         Converts the SymmetricMatrix into a 2D array.
 
         This method constructs a 2D array based on the values corresponding to 
-        pairs of keys from `ordered_entities`. The order of the keys in `ordered_entities` 
+        pairs of keys from `ordered_keys`. The order of the keys in `ordered_keys` 
         dictates the order of the rows and columns in the resulting 2D array.
 
         Parameters:
         ----------
-        ordered_entities : Iterable[ Hashable ]
+        ordered_keys : Iterable[ Hashable ]
             An iterable (e.g., list) of keys that defines the order of rows and 
             columns in the 2D array.
 
@@ -273,29 +273,29 @@ class SymmetricMatrix:
         -------
         list[list[Any]]
             A 2D array where each element represents the value for the pair of keys 
-            `(key1, key2)` based on the order defined by `ordered_entities`.
+            `(key1, key2)` based on the order defined by `ordered_keys`.
 
         Raises:
         -------
         TypeError
-            If `ordered_entities` is not an iterable (e.g., list).
+            If `ordered_keys` is not an iterable (e.g., list).
 
         """
 
         #Ensures we have one ordered set of keys
-        if not isinstance( ordered_entities, Iterable ):
+        if not isinstance( ordered_keys, Iterable ):
             raise TypeError(
                 f"Invalid type for 'ordered_entities'. Expected an Iterable (e.g., list, tuple) but got "
-                f"{type(ordered_entities).__name__}. Please pass a valid iterable to determine the "
+                f"{type(ordered_keys).__name__}. Please pass a valid iterable to determine the "
                 "order of rows and columns in the resulting 2D array."
             )
             
         #Builds the resulting 2d array
         result = []
-        for key1 in ordered_entities:
+        for key1 in ordered_keys:
             #Initiates row
             row = []
-            for key2 in ordered_entities:
+            for key2 in ordered_keys:
                 #Adds value for pair
                 row.append( self[ key1, key2 ] )
             #Adds row to final structure
@@ -303,18 +303,18 @@ class SymmetricMatrix:
             
         return result
     
-    def to_2d_dict( self, entities: Optional[ Iterable[ Hashable ] ] = None  ) ->  dict[ Hashable, dict[ Hashable, Any ] ]:
+    def to_2d_dict( self, selected_keys: Optional[ Iterable[ Hashable ] ] = None  ) ->  dict[ Hashable, dict[ Hashable, Any ] ]:
         """
         Converts a set of key-value pairs into a 2D dictionary.
 
-        This method constructs a 2D dictionary where the keys from `entities` 
+        This method constructs a 2D dictionary where the keys from `selected_keys` 
         serve as both the row and column headers, and the values are derived 
         from the corresponding key pairs `(key1, key2)`. If `entities` is not 
         provided, the method uses `self.keys`.
 
         Parameters:
         ----------
-        entities : Optional[Iterable[Hashable]], optional
+        selected_keys : Optional[Iterable[Hashable]], optional
             An iterable of hashable keys that defines the order of rows and columns 
             in the 2D dictionary. If not provided, `self.keys` is used.
 
@@ -328,26 +328,26 @@ class SymmetricMatrix:
         Raises:
         -------
         TypeError
-            If `entities` is not an iterable (e.g., list, tuple).
+            If `selected_keys` is not an iterable (e.g., list, tuple).
         """
 
 
         #Ensures we have one ordered set of keys
-        if entities is None:
-            entities = self.keys
-        elif not isinstance( entities, Iterable ):
+        if selected_keys is None:
+            selected_keys = self.keys
+        elif not isinstance( selected_keys, Iterable ):
             raise TypeError(
                 f"Invalid type for 'entities'. Expected an Iterable (e.g., list, tuple) but got "
-                f"{type(entities).__name__}. Please pass a valid iterable to determine the "
+                f"{type(selected_keys).__name__}. Please pass a valid iterable to determine the "
                 "keys in the resulting 2D dictionary."
             )
             
         #Builds the resulting 2d dictionary
         result = {}
-        for key1 in entities:
+        for key1 in selected_keys:
             #Initiates sub-dict
             subdict = {}
-            for key2 in entities:
+            for key2 in selected_keys:
                 #Adds value for pair
                 subdict[ key2 ] = self[ key1, key2 ]
             #Adds subdict to final structure
