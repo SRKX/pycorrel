@@ -1,11 +1,11 @@
 
 # PyCorrelation
 
-**PyCorrelation** is a Python package designed to handle symmetric and correlation matrices efficiently. It builds upon the concept of symmetric matrices to provide a class dedicated to correlation operations, ensuring values fall within the valid range \([-1, 1]\), and automatically maintaining correlations of 1 on the diagonal.
+**PyCorrelation** is a Python package designed to handle symmetric and correlation matrices efficiently. It builds upon the concept of symmetric matrices to provide a class dedicated to correlation operations, ensuring values fall within the valid range $(-1,1)$, and automatically maintaining correlations of 1 on the diagonal.
 
 ## Features
 
-- A class ensuring symmetry in a matrix.
+- A class ensuring symmetry in a matrix: $x_{i,j} = x_{j,i}$
 - A class for managing correlation matrices with strict validation of correlation values.
 - Methods to set, retrieve, and validate correlation pairs using user-friendly indexers.
 
@@ -54,7 +54,7 @@ This is the base class for symmetric matrices. It allows you to define and manip
 
 ### `CorrelationMatrix`
 
-This class extends `SymmetricMatrix` and is specialized for correlation matrices. It includes additional validation to ensure values are always between \(-1\) and \(1\), and that identical keys always have a correlation of 1.
+This class extends `SymmetricMatrix` and is specialized for correlation matrices. It includes additional validation to ensure values are always in $(-1,1)$, and that identical keys always have a correlation of 1.
 
 ## License
 
